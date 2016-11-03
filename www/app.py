@@ -6,9 +6,16 @@ import logging;logging.basicConfig(level=logging.INFO)
 import asyncio, os, json, time
 from datetime import datetime
 from aiohttp import web
+from coroweb import get
+from models import User
 
+@get('/')
 def index(request):
-    return web.Response(body=b'<h1>Awesome</h1>')
+    users = yield from User.findAll()
+    return {
+        '__template__': 'test.html',
+        'users': users
+    }
 
 async def init(loop):
     app = web.Application(loop=loop)
